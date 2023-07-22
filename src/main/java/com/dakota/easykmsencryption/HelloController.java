@@ -2,6 +2,7 @@ package com.dakota.easykmsencryption;
 
 import com.dakota.easykmsencryption.models.KMSKey;
 import com.dakota.easykmsencryption.services.KmsService;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -57,12 +58,12 @@ public class HelloController {
     }
 
     public void filter(){
-        var items = keyDropDown.getItems();
+        ObservableList<KMSKey> items = keyDropDown.getItems();
         items.clear();
 
         if(filterCheckBox.isSelected()){
             String filter = filterTextField.getText().trim();
-            var filteredKeys = kmsKeys.stream().filter(key -> key.getAliasName().contains(filter)).toList();
+            List<KMSKey> filteredKeys = kmsKeys.stream().filter(key -> key.getAliasName().contains(filter)).toList();
             items.addAll(filteredKeys);
         }else{
             items.addAll(kmsKeys);

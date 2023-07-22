@@ -2,6 +2,8 @@ package com.dakota.easykmsencryption.services;
 
 import com.amazonaws.encryptionsdk.AwsCrypto;
 import com.amazonaws.encryptionsdk.CommitmentPolicy;
+import com.amazonaws.encryptionsdk.CryptoResult;
+import com.amazonaws.encryptionsdk.kmssdkv2.KmsMasterKey;
 import com.amazonaws.encryptionsdk.kmssdkv2.KmsMasterKeyProvider;
 import com.dakota.easykmsencryption.models.KMSKey;
 import software.amazon.awssdk.services.kms.KmsClient;
@@ -30,7 +32,7 @@ public class KmsService {
                 .filter(aliasListEntry -> !aliasListEntry.aliasName().contains("alias/aws"))
                 .toList();
 
-        for(var alias : aliases){
+        for(AliasListEntry alias : aliases){
             DescribeKeyRequest request = DescribeKeyRequest.builder().keyId(alias.targetKeyId()).build();
             DescribeKeyResponse response = client.describeKey(request);
             KMSKey key = new KMSKey(alias.aliasName(), alias.aliasArn(), response.keyMetadata().keyId(), response.keyMetadata().arn());
@@ -44,7 +46,7 @@ public class KmsService {
         String result = "";
         try {
             KmsMasterKeyProvider keyProvider = KmsMasterKeyProvider.builder().buildStrict(keyArn);
-            var cryptoResult = crypto.encryptData(keyProvider, plaintext.getBytes(StandardCharsets.UTF_8));
+            CryptoResult<byte[], KmsMasterKey> cryptoResult = crypto.encryptData(keyProvider, plaintext.getBytes(StandardCharsets.UTF_8));
             result = Base64.getEncoder().encodeToString(cryptoResult.getResult());
         } catch (Exception ex){
             System.err.println(ex.getMessage());
