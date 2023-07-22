@@ -7,7 +7,6 @@ module com.dakota.easykmsencryption {
     requires org.kordamp.bootstrapfx.core;
     requires software.amazon.awssdk.services.kms;
     requires software.amazon.awssdk.regions;
-    requires lombok;
     requires aws.encryption.sdk.java;
 
     opens com.dakota.easykmsencryption to javafx.fxml;
